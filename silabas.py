@@ -11,7 +11,7 @@ divisaoSilabica = ''
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-image = cv2.imread('spotify4.png')
+image = cv2.imread('spotify-especial.png')
 
 img_grayScale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 ret, thresh = cv2.threshold(img_grayScale, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -42,8 +42,8 @@ for palavra in ListofWords:
 filteredList = [item for item in filteredList if item.isalpha()]
 
 #As linhas seguintes são para evitar minha perda de tempo agora, removelas e implementar função de identificar entidades
-filteredList.remove('PLAYLIST')
-filteredList.remove('rachelcouto')
+#filteredList.remove('PLAYLIST')
+#filteredList.remove('rachelcouto')
 #ListofWords = [x for x in ListofWords if not any(c.isdigit() for c in x)]
 print(filteredList)
 
@@ -53,7 +53,7 @@ palavrasConcatenadas = []
 print(len(filteredList))
 for i in range(0,(len(filteredList)-1)):
     elemento = filteredList[i]+filteredList[i+1]
-    palavrasConcatenadas.append(elemento)
+    palavrasConcatenadas.append([elemento,filteredList[i],filteredList[i+1]])
 
 print(palavrasConcatenadas)
 
@@ -72,10 +72,23 @@ with open('palavras.csv', newline='') as csvfile:
 
 
 for elemento in palavrasConcatenadas:
-    if elemento in silabasDict:
-        divisaoSilabica = silabasDict[elemento]
+    if elemento[0] in silabasDict:
+        divisaoSilabica = silabasDict[elemento[0]]
         print(divisaoSilabica);
         break
-    
+
 if divisaoSilabica == '':
     print('palavra não encontrada')
+
+#operações para somar as silabas
+
+silabas = []
+silabasConcatenadas = []
+silabas = divisaoSilabica.split('-')
+print(silabas)
+
+for i in range(0, len(silabas)-1):
+    soma = silabas[i] + silabas[i+1]
+    silabasConcatenadas.append(soma)
+
+print(silabasConcatenadas)
