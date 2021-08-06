@@ -11,7 +11,7 @@ divisaoSilabica = ''
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-image = cv2.imread('spotify-especial.png')
+image = cv2.imread('spotify-correto.png')
 
 img_grayScale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 ret, thresh = cv2.threshold(img_grayScale, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -70,10 +70,13 @@ with open('palavras.csv', newline='') as csvfile:
 
 #    print(silabasDict)
 
+palavra = []
 
 for elemento in palavrasConcatenadas:
     if elemento[0] in silabasDict:
+        palavra = elemento
         divisaoSilabica = silabasDict[elemento[0]]
+        print(palavra)
         print(divisaoSilabica);
         break
 
@@ -87,8 +90,38 @@ silabasConcatenadas = []
 silabas = divisaoSilabica.split('-')
 print(silabas)
 
-for i in range(0, len(silabas)-1):
-    soma = silabas[i] + silabas[i+1]
-    silabasConcatenadas.append(soma)
 
-print(silabasConcatenadas)
+
+quebrasAceitaveis = []
+aux = ''
+
+for i in range(0,len(silabas)-1):
+    variavel = silabas[i]
+    aux = aux + variavel
+    quebrasAceitaveis.append(aux)
+
+#print(quebrasAceitaveis)
+aux = ''
+
+for i in range(len(silabas)-1,0,-1):
+    variavel = silabas[i]
+    aux = variavel + aux
+    quebrasAceitaveis.append(aux)
+
+print(quebrasAceitaveis)
+
+# função para checar se uma lista está contida em outra
+def list_contains(List1, List2): 
+    set1 = set(List1) 
+    set2 = set(List2) 
+    if set1.intersection(set2): 
+        return True 
+    else: 
+        return False
+
+# checagem final
+
+if list_contains(palavra,quebrasAceitaveis):
+    print("A palavra {} foi separadas em silábas corretamente".format(palavra[0]))
+else:
+    print("A palavra {} foi separadas em silábas erroneamente".format(palavra[0]))
